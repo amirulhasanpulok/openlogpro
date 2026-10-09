@@ -18,10 +18,6 @@ release page and run it as described below. Servers that are already installed u
   machine, used (sign-in, a router, logs, search, export, moving the log port) and updated from the previous release
   through the portal before it is offered.
 
-Built from commit c60d07edf0cd.
-
-Promoted from amirulhasanpulok/openlogprouat after testing. sha256 b125ad1eeb1f26e1be24a36ba3afcb6a3ea114ef1a7fe11c79fbca006873f30d.
-
 ---
 
 NAT evidence collection and MikroTik PPPoE attribution: a web portal, PostgreSQL, ClickHouse, syslog-ng and
