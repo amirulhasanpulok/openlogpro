@@ -3,6 +3,14 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.6
+
+- Fix: the installer, given the example text from the instructions (`--licence 'OL1....'`), only said "must be the whole
+  licence text". It now says that this is the example, that nothing was installed, and what to do instead: install without
+  `--licence` (evaluation mode) and paste the licence under **Server > Plan** afterwards, because a licence is issued for
+  one server from its Server ID. The install guide and the front page of the public repository now start with the command
+  **without** `--licence`.
+
 ## 1.0.5
 
 - Documentation, published on the front page of the public repository together with each version: an **installation
