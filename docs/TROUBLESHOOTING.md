@@ -1,7 +1,7 @@
 # Troubleshooting
 
 Find the symptom, read the cause, apply the fix. If it is not here, go to [What to send to support](#what-to-send-to-support).
-This guide describes version 1.0.5.
+This guide describes version 1.0.6.
 
 **Contents**
 
@@ -42,6 +42,10 @@ NTP-synchronised (`sudo timedatectl set-ntp true`).
   firewall, then run again.
 - **The one-line form was cut off** (a dropped connection while piping into `bash`): download the installer first, then run
   it ([Installation guide, section 3.2](INSTALL.md#32-review-first-install)).
+- **`'OL1....' is only the example from the instructions, not a licence`** (or `--licence must be the whole licence text`):
+  nothing was installed. Run the command again **without `--licence`**; the server starts in evaluation mode and you install
+  the licence afterwards under **Server > Plan** (send the Server ID shown there to your provider). If you do pass a
+  licence, it is the whole line starting with `OL1.`, copied without line breaks.
 - **`Run with sudo`**: the installer must run as root.
 - **A package step failed** (`apt` error): run `sudo apt-get update`, fix what it reports (a locked package manager, a
   full disk, an unreachable mirror), then run the installer again. It continues where the machine is, and keeps data and
