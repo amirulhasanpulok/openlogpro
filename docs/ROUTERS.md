@@ -2,7 +2,7 @@
 
 Each router needs three things: a **read-only API account** so the portal can read its identity and PPPoE sessions,
 the **device entry** in the portal, and the **logging commands** that send its NAT and PPPoE logs to your Openlog server.
-This guide covers RouterOS 7 and RouterOS 6 (version 1.0.5 of the portal writes the right commands for both).
+This guide covers RouterOS 7 and RouterOS 6 (version 1.0.6 of the portal writes the right commands for both).
 
 **Contents**
 
