@@ -1,6 +1,6 @@
 # Installation guide
 
-This guide installs Openlog on a new Ubuntu 24.04 server and takes it to a verified, secured, licensed system with its first router connected. It describes version 1.0.5.
+This guide installs Openlog on a new Ubuntu 24.04 server and takes it to a verified, secured, licensed system with its first router connected. It describes version 1.0.6.
 
 **Contents**
 
@@ -63,7 +63,8 @@ A proxy in the path is not configured by the installer; if downloads must go thr
 
 ### 2.3 What to have ready
 
-- Your **licence** (a line starting with `OL1.`). It is optional at install time.
+- Nothing to buy or paste first: the install starts in evaluation mode. Your **licence** (a line starting with `OL1.`) is issued for
+  this one server **after** the install, from the Server ID the portal shows ([section 5](#5-activate-your-licence)).
 - If you want HTTPS now: a **DNS name** that already points at this server, and an e-mail address for the certificate
   notices. You can also do this later ([section 6](#6-address-and-https)).
 - Whether the routers' logs will use port 514 or another port.
@@ -92,10 +93,19 @@ You should know this before running it on any machine that is not brand new.
 On the server, as root or with `sudo`:
 
 ```bash
-curl -fsSL https://github.com/amirulhasanpulok/openlogpro/releases/latest/download/install.sh | sudo bash -s -- --licence 'OL1....'
+curl -fsSL https://github.com/amirulhasanpulok/openlogpro/releases/latest/download/install.sh | sudo bash
 ```
 
-The address always points at the **newest published release**. Leave `--licence` out to start in evaluation mode.
+The address always points at the **newest published release**. The server starts in evaluation mode; you install the
+licence afterwards ([section 5](#5-activate-your-licence)), because a licence is issued for one server and its **Server ID**
+is only known once the server is installed.
+
+If your provider has already given you a licence for this very server, add it to the command (paste the **whole**
+licence, which is one long line starting with `OL1.`; the three dots of an example are not a licence and are refused):
+
+```bash
+curl -fsSL https://github.com/amirulhasanpulok/openlogpro/releases/latest/download/install.sh | sudo bash -s -- --licence 'THE-WHOLE-LICENCE-TEXT'
+```
 
 ### 3.2 Review first install
 
@@ -104,7 +114,7 @@ For change-controlled environments, download the installer, read it, then run it
 ```bash
 curl -fsSLO https://github.com/amirulhasanpulok/openlogpro/releases/latest/download/install.sh
 less install.sh
-sudo bash install.sh --licence 'OL1....'
+sudo bash install.sh
 ```
 
 The release itself is checked by the installer against its published SHA-256 before anything is unpacked. To check it by
@@ -120,7 +130,7 @@ Put options after `install.sh` (or after `bash -s --` in the one-line form).
 
 | Option | Meaning |
 |---|---|
-| `--licence 'OL1....'` | Install your licence now. Optional; it can be pasted later under **Server > Plan** |
+| `--licence 'THE-WHOLE-LICENCE'` | Install a licence now, if you already have one for this server. Normally you leave it out and paste the licence under **Server > Plan** after the install |
 | `--domain noc.example.com` | The address people will open. Default: the server's own IPv4 address |
 | `--email you@example.com` | Turns on HTTPS with Let's Encrypt. `--domain` must then be a DNS name that points at this server, and ports 80 and 443 must be reachable from the internet |
 | `--syslog-port 5140` | The port routers send logs to (default 514; otherwise 1024 to 65535). Changeable later in the portal |
@@ -129,9 +139,9 @@ Put options after `install.sh` (or after `bash -s --` in the one-line form).
 Examples:
 
 ```bash
-# HTTPS on your own name, licence installed
+# HTTPS on your own name
 curl -fsSL https://github.com/amirulhasanpulok/openlogpro/releases/latest/download/install.sh | \
-  sudo bash -s -- --licence 'OL1....' --domain noc.example.com --email noc@example.com
+  sudo bash -s -- --domain noc.example.com --email noc@example.com
 
 # Routers will send to port 5140
 curl -fsSL https://github.com/amirulhasanpulok/openlogpro/releases/latest/download/install.sh | \
