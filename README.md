@@ -5,7 +5,7 @@ routers, matches every connection to the subscriber who made it, and keeps it se
 Ubuntu server: portal, PostgreSQL, ClickHouse, syslog-ng and Nginx, installed and updated by one command or from the
 portal.
 
-**Current version: 1.0.5** | built 2026-10-09T12:35:32Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
+**Current version: 1.0.6** | built 2026-10-09T13:06:17Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
 
 This repository holds **releases only**: finished programs, no source code.
 
@@ -14,11 +14,13 @@ This repository holds **releases only**: finished programs, no source code.
 On a clean **Ubuntu 24.04 LTS (x86_64)** server, as root or with `sudo`, with internet access:
 
 ```bash
-curl -fsSL https://github.com/amirulhasanpulok/openlogpro/releases/latest/download/install.sh | sudo bash -s -- --licence 'OL1....'
+curl -fsSL https://github.com/amirulhasanpulok/openlogpro/releases/latest/download/install.sh | sudo bash
 ```
 
-Replace `OL1....` with the licence from your provider. **Without `--licence` the server runs in evaluation mode**
-(up to 3 devices, 3 users, 30 days of logs); the licence can be pasted later under **Server > Plan**.
+The server starts in **evaluation mode** (up to 3 devices, 3 users, 30 days of logs). **A licence belongs to one server,
+so you get it after the install:** open **Server > Plan**, send the **Server ID** shown there to your provider, and
+paste the licence you receive into the same page. Nothing is restarted.
+
 The installer checks the machine first, installs everything, verifies it, and prints the address and the first
 sign-in. It takes about 5 to 10 minutes. Prefer to read the script before running it? See
 [Review first](docs/INSTALL.md#32-review-first-install).
@@ -43,10 +45,10 @@ sign-in. It takes about 5 to 10 minutes. Prefer to read the script before runnin
 | Updates | From **Server > Updates**, or `sudo /usr/local/lib/openlog/update-log-server`. The last releases are kept, so you can go back |
 | Support | **Report a problem** in the portal sidebar creates a report with a reference number and the server's technical details, without passwords or logs |
 
-## What is new in 1.0.5
+## What is new in 1.0.6
 
-- Documentation, published on the front page of the public repository together with each version: an **installation
-  guide** (requirements, network and firewall, install options, what the installer changes, first sign-in, licence,
-  HTTPS, production checklist, file and service reference), a guide to **connect MikroTik routers** (RouterOS 7 and 6),
-  **updates and rollback**, and **troubleshooting**. Every limit, option and command in them is checked against the
-  program when the release is built. There is no change to the programs.
+- Fix: the installer, given the example text from the instructions (`--licence 'OL1....'`), only said "must be the whole
+  licence text". It now says that this is the example, that nothing was installed, and what to do instead: install without
+  `--licence` (evaluation mode) and paste the licence under **Server > Plan** afterwards, because a licence is issued for
+  one server from its Server ID. The install guide and the front page of the public repository now start with the command
+  **without** `--licence`.
