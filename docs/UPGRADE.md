@@ -1,7 +1,7 @@
 # Updates and rollback
 
 How to move an installed server to a newer version, how the licence decides which versions you may install, and how to
-go back to an earlier version if a new one misbehaves. This guide describes version 1.0.5.
+go back to an earlier version if a new one misbehaves. This guide describes version 1.0.6.
 
 **Contents**
 
