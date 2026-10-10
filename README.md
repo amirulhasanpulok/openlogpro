@@ -5,7 +5,7 @@ routers, matches every connection to the subscriber who made it, and keeps it se
 Ubuntu server: portal, PostgreSQL, ClickHouse, syslog-ng and Nginx, installed and updated by one command or from the
 portal.
 
-**Current version: 1.0.6** | built 2026-10-09T13:06:17Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
+**Current version: 1.0.8** | built 2026-10-10T09:00:25Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
 
 This repository holds **releases only**: finished programs, no source code.
 
@@ -34,6 +34,7 @@ sign-in. It takes about 5 to 10 minutes. Prefer to read the script before runnin
 | [Updates and rollback](docs/UPGRADE.md) | Updating from the portal or the command line, licence coverage, going back to an earlier version |
 | [Troubleshooting](docs/TROUBLESHOOTING.md) | Installer blockers, sign-in, licence, routers that send no logs, failed updates, what to send to support |
 | [Release notes](CHANGELOG.md) | What changed in every version |
+| [Licence agreement (EULA)](docs/EULA.md) | The terms of use. The first administrator is asked to accept it when signing in |
 
 ## At a glance
 
@@ -41,14 +42,14 @@ sign-in. It takes about 5 to 10 minutes. Prefer to read the script before runnin
 |---|---|
 | Platform | Ubuntu 24.04 LTS, x86_64, systemd. 2 CPU cores or more, 4 GiB RAM or more, 4 GiB free disk to install (20 GiB or more advised; evidence grows with traffic) |
 | Ports | In: 80 and 443 (portal), 514 UDP and TCP (routers' logs; changeable). Out: GitHub and the package mirrors for install and updates, and each router's API port |
-| Licence | Signed licence tied to one server; subscription or perpetual. Evaluation mode without one |
+| Licence | Signed licence tied to one server (its Server ID: machine, hardware and network card); subscription or perpetual. Evaluation mode without one |
+| Integrity | Every release is signed. The installer and the updater refuse a release whose signature does not verify |
 | Updates | From **Server > Updates**, or `sudo /usr/local/lib/openlog/update-log-server`. The last releases are kept, so you can go back |
 | Support | **Report a problem** in the portal sidebar creates a report with a reference number and the server's technical details, without passwords or logs |
 
-## What is new in 1.0.6
+## What is new in 1.0.8
 
-- Fix: the installer, given the example text from the instructions (`--licence 'OL1....'`), only said "must be the whole
-  licence text". It now says that this is the example, that nothing was installed, and what to do instead: install without
-  `--licence` (evaluation mode) and paste the licence under **Server > Plan** afterwards, because a licence is issued for
-  one server from its Server ID. The install guide and the front page of the public repository now start with the command
-  **without** `--licence`.
+- Fix: **Report a problem** sent its e-mail link to the organization's own support address
+  (Organization > Contact), the contact that organization shows its own subscribers — never to the
+  Provider. A report now always goes to the Provider's own address, which does not depend on the
+  organization's settings.
