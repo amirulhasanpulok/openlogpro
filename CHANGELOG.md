@@ -3,6 +3,31 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.8
+
+- Fix: **Report a problem** sent its e-mail link to the organization's own support address
+  (Organization > Contact), the contact that organization shows its own subscribers — never to the
+  Provider. A report now always goes to the Provider's own address, which does not depend on the
+  organization's settings.
+
+## 1.0.7
+
+- New: **releases are signed.** `install.sh` and `update-log-server` now refuse a release whose signature does not
+  verify against the Provider's public key; a release before 1.0.7 is unsigned and the new scripts will not install it
+  by tag.
+- New: a stronger, hardware-bound **Server ID** (24 hex digits: the machine id, the hardware's product UUID and the
+  primary network interface's MAC address, each a salted hash). Copying a server (for example cloning a virtual
+  machine) now gives it a different Server ID instead of silently reusing the licensed one. A genuine hardware change
+  (new host, new network card) keeps working for a 14-day grace period shown on **Server > Plan**, so there is time to
+  ask for a new licence. Licences issued for the old, 16-digit Server ID keep working.
+- New: release binaries are now built **obfuscated** (names, build paths and string literals scrambled), raising the
+  cost of reading them with `strings` or a decompiler. This does not replace the licence agreement's restriction on
+  reverse engineering; it makes it more expensive.
+- New: an **End User Licence Agreement** (`docs/customer/EULA.md`, also published as `LICENSE.md` on the public
+  repository). The first administrator to sign in after installing or updating is asked to accept it in the portal; a
+  later version of the agreement asks again. The agreement is a draft and has not had legal review; treat it as a
+  starting point, not a final contract.
+
 ## 1.0.6
 
 - Fix: the installer, given the example text from the instructions (`--licence 'OL1....'`), only said "must be the whole
