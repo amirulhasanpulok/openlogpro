@@ -1,6 +1,6 @@
 # Installation guide
 
-This guide installs Openlog on a new Ubuntu 24.04 server and takes it to a verified, secured, licensed system with its first router connected. It describes version 1.0.6.
+This guide installs Openlog on a new Ubuntu 24.04 server and takes it to a verified, secured, licensed system with its first router connected. It describes version 1.0.8.
 
 **Contents**
 
@@ -77,6 +77,7 @@ You should know this before running it on any machine that is not brand new.
 - **Installs** PostgreSQL, ClickHouse (from its own package repository), syslog-ng, Nginx, certbot, logrotate, ufw
   (installed, **not switched on** unless you ask), and a few helpers.
 - **Sets the system time zone to `Asia/Dhaka`.** The server keeps one time, in storage and on screen.
+- **Checks** the release's signature before it unpacks anything ([section 3.2](#32-review-first-install)).
 - **Creates** two system users (`logportal`, `openlog-collector`) with no shell, and the services listed in
   [section 10](#10-reference-what-is-installed-and-where).
 - **Raises** the kernel's UDP receive buffer limit (`/etc/sysctl.d/90-openlog.conf`) so bursts of router logs are not
@@ -117,12 +118,25 @@ less install.sh
 sudo bash install.sh
 ```
 
-The release itself is checked by the installer against its published SHA-256 before anything is unpacked. To check it by
-hand, download the two files from the [release page](https://github.com/amirulhasanpulok/openlogpro/releases/latest) and run:
+The release itself is checked by the installer before anything is unpacked: its **signature** (made by the Provider's release
+key, which the installer carries) must verify, and its SHA-256 must match. A release that was changed after it was published, or
+that someone else made, is refused. To check it by hand, download the three files from the
+[release page](https://github.com/amirulhasanpulok/openlogpro/releases/latest), save the Provider's public release key as `release-key.pem`
+(it is this text; the installer carries the same key), and run:
+
+```
+-----BEGIN PUBLIC KEY-----
+MCowBQYDK2VwAyEAyDAuvM3kN6iGJNfoTRQ9ox5COw8VOQBgIF5pi5e+MaI=
+-----END PUBLIC KEY-----
+```
 
 ```bash
+openssl pkeyutl -verify -pubin -inkey release-key.pem -rawin -in openlog-linux-amd64.tar.gz.sha256 -sigfile openlog-linux-amd64.tar.gz.sha256.sig
 sha256sum -c openlog-linux-amd64.tar.gz.sha256
 ```
+
+The first command prints `Signature Verified Successfully`; the second `openlog-linux-amd64.tar.gz: OK`. Releases are signed from
+version 1.0.7 on.
 
 ### 3.3 Options
 
@@ -183,7 +197,9 @@ If it stops with `AUDIT BLOCKER`, fix what it names and run the same command aga
    ```
 
 2. Open the address the installer printed and sign in as `admin`.
-3. **Change the password** now (**Users & Access**), and create a named account for each person instead of sharing
+3. **Accept the licence agreement.** The first time an administrator signs in, the portal shows the
+   [End User Licence Agreement](EULA.md); an administrator must read and accept it for the organisation (the acceptance is recorded
+   with the name, time and version). **Change the password** now (**Users & Access**), and create a named account for each person instead of sharing
    `admin`. The roles are:
 
    | Role | Can use |
@@ -205,10 +221,16 @@ Until a licence is installed the server runs in **evaluation mode**: up to 3 dev
 retention. Nothing stops working, and nothing is deleted, when a limit is reached; new devices or users are simply not
 added.
 
-1. Open **Server > Plan**. Copy the **Server ID** (for example `5F15-EF2A-3419-4633`).
+1. Open **Server > Plan**. Copy the **Server ID** (for example `7A31-0C5E-91B4-D6E8-2F07-A9C3`).
 2. Send it to your provider. A licence is issued for exactly that server.
 3. Paste the licence into **Install or renew a licence** and press **Install licence**. No restart is needed, and the
    page shows the licence type, the customer, the limits and the dates.
+
+The Server ID is made from three facts of the server: its operating-system id, the id of the machine or virtual machine it runs
+on, and the MAC address of its main network card; the portal shows only a hash of each. If the licence no longer matches all three
+(you **copied** the virtual machine, moved it to a new host, or replaced the network card), the Server > Plan page says so and the
+licence **keeps working for 14 days**; send the new Server ID to your provider in that time. A licence is for one server:
+a copy that runs next to the original needs its own licence.
 
 A **subscription** licence covers the versions built while it is valid (plus 14 days of grace). A **perpetual** licence
 never expires and includes new versions for the period stated on it (up to 5 years from issue). A version outside the
