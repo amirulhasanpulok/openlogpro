@@ -1,6 +1,6 @@
 # Installation guide
 
-This guide installs Openlog on a new Ubuntu 24.04 server and takes it to a verified, secured, licensed system with its first router connected. It describes version 1.0.8.
+This guide installs Openlog on a new Ubuntu 24.04 server and takes it to a verified, secured, licensed system with its first router connected. It describes version 1.0.14.
 
 **Contents**
 
@@ -42,7 +42,7 @@ This guide installs Openlog on a new Ubuntu 24.04 server and takes it to a verif
 **Sizing the evidence storage.** Logs are kept for the retention you choose (default **180 days**, 7 to 365,
 **Log Settings**). Storage depends on how much your routers log, so measure instead of guessing: after the first week of
 real traffic, read the storage figure on the Dashboard and multiply it out to your retention. A disk can be grown later
-from **Server > Storage** without a reinstall. If the machine is a VM, take a **snapshot before you install**.
+from **Server Settings > Storage** without a reinstall. If the machine is a VM, take a **snapshot before you install**.
 
 ### 2.2 Network and firewall
 
@@ -51,7 +51,7 @@ Open these paths **before** you install.
 | Direction | From / to | Port | Purpose |
 |---|---|---|---|
 | In | Your administrators | TCP 80, TCP 443 | The portal (443 once HTTPS is on) |
-| In | Your routers | UDP **and** TCP 514 | Their logs. The log port can be changed later (**Server > Network**) |
+| In | Your routers | UDP **and** TCP 514 | Their logs. The log port can be changed later (**Server Settings > Network**) |
 | In | Your administrators | TCP 22 | SSH |
 | Out | This server | TCP 443 to `api.github.com`, `github.com` and `*.githubusercontent.com` | Download the release (install, updates, the update check) |
 | Out | This server | TCP 443 to `packages.clickhouse.com`; TCP 80 to `archive.ubuntu.com` and `security.ubuntu.com` | Packages. Also needed by later updates that bring new packages |
@@ -144,7 +144,7 @@ Put options after `install.sh` (or after `bash -s --` in the one-line form).
 
 | Option | Meaning |
 |---|---|
-| `--licence 'THE-WHOLE-LICENCE'` | Install a licence now, if you already have one for this server. Normally you leave it out and paste the licence under **Server > Plan** after the install |
+| `--licence 'THE-WHOLE-LICENCE'` | Install a licence now, if you already have one for this server. Normally you leave it out and paste the licence under **Server Settings > Licence** after the install |
 | `--domain noc.example.com` | The address people will open. Default: the server's own IPv4 address |
 | `--email you@example.com` | Turns on HTTPS with Let's Encrypt. `--domain` must then be a DNS name that points at this server, and ports 80 and 443 must be reachable from the internet |
 | `--syslog-port 5140` | The port routers send logs to (default 514; otherwise 1024 to 65535). Changeable later in the portal |
@@ -221,14 +221,14 @@ Until a licence is installed the server runs in **evaluation mode**: up to 3 dev
 retention. Nothing stops working, and nothing is deleted, when a limit is reached; new devices or users are simply not
 added.
 
-1. Open **Server > Plan**. Copy the **Server ID** (for example `7A31-0C5E-91B4-D6E8-2F07-A9C3`).
+1. Open **Server Settings > Licence**. Copy the **Server ID** (for example `7A31-0C5E-91B4-D6E8-2F07-A9C3`).
 2. Send it to your provider. A licence is issued for exactly that server.
 3. Paste the licence into **Install or renew a licence** and press **Install licence**. No restart is needed, and the
    page shows the licence type, the customer, the limits and the dates.
 
 The Server ID is made from three facts of the server: its operating-system id, the id of the machine or virtual machine it runs
 on, and the MAC address of its main network card; the portal shows only a hash of each. If the licence no longer matches all three
-(you **copied** the virtual machine, moved it to a new host, or replaced the network card), the Server > Plan page says so and the
+(you **copied** the virtual machine, moved it to a new host, or replaced the network card), the Server Settings > Licence page says so and the
 licence **keeps working for 14 days**; send the new Server ID to your provider in that time. A licence is for one server:
 a copy that runs next to the original needs its own licence.
 
@@ -243,12 +243,12 @@ By default the portal answers on the server's IP address over HTTP. For a name a
 
 **At install time:** `--domain noc.example.com --email noc@example.com` (see [3.3](#33-options)).
 
-**Later, from the portal:** **Server > Domain**.
+**Later, from the portal:** **Server Settings > Domain**.
 
 1. Create a DNS `A` record for the name that points at this server.
 2. Set the **Support e-mail** under **Organization > Contact** (the certificate notices go there).
 3. Make sure ports 80 and 443 reach the server from the internet.
-4. On **Server > Domain** enter the name and press **Set up HTTPS**, and confirm with your password.
+4. On **Server Settings > Domain** enter the name and press **Set up HTTPS**, and confirm with your password.
 
 A certificate from Let's Encrypt is issued and renews by itself. The server stays reachable at its IP address over HTTP,
 so a mistake cannot lock you out. **Remove domain** goes back to the plain setup.
@@ -273,8 +273,8 @@ It must end with `VERIFICATION OK`. Then check:
 | Check | Where | Expected |
 |---|---|---|
 | Services | Dashboard, or `systemctl status log-portal openlog-syslog-worker router-reconciler syslog-ng nginx` | All running |
-| Licence | Server > Plan | Your licence, or evaluation mode on purpose |
-| Updates | Server > Updates | The installed version and the newest one on offer |
+| Licence | Server Settings > Licence | Your licence, or evaluation mode on purpose |
+| Updates | Server Settings > Updates | The installed version and the newest one on offer |
 | A router | Devices | **Receiving logs** after you run the setup commands |
 | Evidence | Search Log | Events of the router's subscribers appear |
 
@@ -301,7 +301,7 @@ sudo systemctl start openlog-backup.service
 Copy `/var/backups/openlog` and `/root/openlog.env` to another system. **The evidence itself (the log events) is not
 in these backups**: protect it with VM or disk snapshots, or exports from Search Log, according to your retention duty.
 
-**Monitoring.** Watch the free disk space (Dashboard and **Server > Storage**), the service health (Dashboard), and turn on
+**Monitoring.** Watch the free disk space (Dashboard and **Server Settings > Storage**), the service health (Dashboard), and turn on
 Telegram alerts under **Notifications** for devices that stop sending logs. Keep NTP time synchronisation on.
 
 **Retention.** Set how long logs are kept under **Log Settings** (default 180 days). Cleanup runs nightly in the
