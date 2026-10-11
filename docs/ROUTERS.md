@@ -2,7 +2,7 @@
 
 Each router needs three things: a **read-only API account** so the portal can read its identity and PPPoE sessions,
 the **device entry** in the portal, and the **logging commands** that send its NAT and PPPoE logs to your Openlog server.
-This guide covers RouterOS 7 and RouterOS 6 (version 1.0.8 of the portal writes the right commands for both).
+This guide covers RouterOS 7 and RouterOS 6 (version 1.0.14 of the portal writes the right commands for both).
 
 **Contents**
 
@@ -80,7 +80,7 @@ server's address and log port, with a **Copy** button.
 Run these in the router's terminal, in order. Choose the block for your **RouterOS version** (`/system resource print`
 shows it). In the portal, **Log setup commands** has a **RouterOS 7 / RouterOS 6** choice and writes exactly these.
 
-Replace `<LOG_SERVER_IP>` and `<LOG_PORT>` (514 unless you changed it under **Server > Network**).
+Replace `<LOG_SERVER_IP>` and `<LOG_PORT>` (514 unless you changed it under **Server Settings > Network**).
 
 ### 5.1 The logging action
 
@@ -161,7 +161,7 @@ differs, logs not arriving, the action missing or changed). More in
 
 | Task | How |
 |---|---|
-| Change the log port | **Server > Network > Log receiving port.** The old port stays open next to the new one until you press **Stop listening**, so routers not yet updated are not cut off. Then update `remote-port` on each router |
+| Change the log port | **Server Settings > Network > Log receiving port.** The old port stays open next to the new one until you press **Stop listening**, so routers not yet updated are not cut off. Then update `remote-port` on each router |
 | Rename a router | Rename it on the router, then **Devices > Edit > Save device** to accept the new identity |
 | Stop collecting from a router | **Devices**: disable the device (its logs are refused at once), or delete it |
 | Remove the evidence rule | `/ip firewall mangle remove [find comment=nat-evidence]` |
