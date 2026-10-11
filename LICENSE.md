@@ -15,7 +15,7 @@ prevails over this one where they differ.
 - **Licence**: the signed line of text (starting `OL1.`) that the Provider issues for your organisation, with its type
   (subscription or perpetual), plan, limits and dates.
 - **Server**: the one computer, physical or virtual, on which the Software runs.
-- **Server ID**: the identifier the Software shows on **Server > Plan**, derived from the Server's identity and hardware, to which a
+- **Server ID**: the identifier the Software shows on **Server Settings > Licence**, derived from the Server's identity and hardware, to which a
   Licence can be tied.
 - **Evaluation Mode**: the limited use the Software allows without a Licence (at present up to 3 devices, 3 users and 30 days of
   log retention).
@@ -67,7 +67,7 @@ h) use the Software in breach of law, or to collect or keep data that you have n
 ## 4. Server changes
 
 If the hardware of the Server changes (a new host, a new network card, a copy of the virtual machine), the Software may keep working for
-a grace period shown on **Server > Plan** and then ask for a Licence for the new Server ID. Ask the Provider for it in good time. A
+a grace period shown on **Server Settings > Licence** and then ask for a Licence for the new Server ID. Ask the Provider for it in good time. A
 change of hardware that is a genuine replacement of the licensed Server will be re-licensed without a further fee for the same Licence;
 a copy that runs next to the original will not.
 
