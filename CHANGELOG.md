@@ -3,6 +3,13 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.15
+
+- Documentation, published on the front page of the public repository: the product description now names what it
+  is in the terms people actually search for — **NAT/CGNAT log server**, alongside the existing PPPoE attribution
+  wording — and the Public IPs section now says "CGNAT/NAT pool" instead of just "NAT pool". No behaviour change,
+  no change to the programs.
+
 ## 1.0.14
 
 - Fix: exporting a **Search Log** result that matched more rows than the export cap (Log Settings >
