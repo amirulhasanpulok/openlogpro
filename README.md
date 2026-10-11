@@ -1,11 +1,11 @@
 # Openlog
 
-**NAT evidence and PPPoE attribution for MikroTik networks.** A web portal that receives the logs of your MikroTik
-routers, matches every connection to the subscriber who made it, and keeps it searchable as evidence. It runs on one
-Ubuntu server: portal, PostgreSQL, ClickHouse, syslog-ng and Nginx, installed and updated by one command or from the
-portal.
+**A NAT and CGNAT log server for MikroTik ISP networks, with PPPoE subscriber attribution.** Openlog receives the logs
+your MikroTik routers already produce — including from carrier-grade NAT (CGNAT) pools shared by many subscribers —
+matches every connection to the subscriber who made it, and keeps it searchable as evidence. It runs on one Ubuntu
+server: portal, PostgreSQL, ClickHouse, syslog-ng and Nginx, installed and updated by one command or from the portal.
 
-**Current version: 1.0.14** | built 2026-10-11T05:47:14Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
+**Current version: 1.0.15** | built 2026-10-11T14:06:57Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
 
 This repository holds **releases only**: finished programs, no source code.
 
@@ -70,7 +70,7 @@ device.
 
 ![Active Users](docs/images/active-users.png)
 
-**Public IPs — your NAT pool from the outside in.** Every public IP your routers have translated traffic through
+**Public IPs — your CGNAT/NAT pool from the outside in.** Every public IP your routers have translated traffic through
 today, how many distinct subscribers shared it, how many events, and which device issued it — useful for spotting a
 pool that is running hot or answering "who else was behind this IP at the same time" directly.
 
@@ -100,11 +100,9 @@ pool that is running hot or answering "who else was behind this IP at the same t
 | Updates | From **Server Settings > Updates**, or `sudo /usr/local/lib/openlog/update-log-server`. The last releases are kept, so you can go back |
 | Support | **Report a problem** in the portal sidebar creates a report with a reference number and the server's technical details, without passwords or logs |
 
-## What is new in 1.0.14
+## What is new in 1.0.15
 
-- Fix: exporting a **Search Log** result that matched more rows than the export cap (Log Settings >
-  Search and export policy > NAT export row cap, 20,000 by default) gave no sign that anything was
-  left out — the CSV or Excel file simply ended early, indistinguishable from a complete export. The
-  page now says so before you download ("Export is limited to the newest N of M; narrow the search for
-  a complete export"), and the export itself carries the real matched total so it is never silently
-  mistaken for the whole result.
+- Documentation, published on the front page of the public repository: the product description now names what it
+  is in the terms people actually search for — **NAT/CGNAT log server**, alongside the existing PPPoE attribution
+  wording — and the Public IPs section now says "CGNAT/NAT pool" instead of just "NAT pool". No behaviour change,
+  no change to the programs.
