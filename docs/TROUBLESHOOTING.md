@@ -1,7 +1,7 @@
 # Troubleshooting
 
 Find the symptom, read the cause, apply the fix. If it is not here, go to [What to send to support](#what-to-send-to-support).
-This guide describes version 1.0.8.
+This guide describes version 1.0.14.
 
 **Contents**
 
@@ -9,7 +9,7 @@ This guide describes version 1.0.8.
 - [The installer fails or stops half way](#the-installer-fails-or-stops-half-way)
 - [The portal does not open](#the-portal-does-not-open)
 - [I cannot sign in](#i-cannot-sign-in)
-- [The licence is refused or the Plan page shows a warning](#the-licence-is-refused-or-the-plan-page-shows-a-warning)
+- [The licence is refused or the Licence page shows a warning](#the-licence-is-refused-or-the-licence-page-shows-a-warning)
 - [A device shows unreachable](#a-device-shows-unreachable)
 - [A device shows no logs](#a-device-shows-no-logs)
 - [Logs arrive but the dashboard is behind](#logs-arrive-but-the-dashboard-is-behind)
@@ -44,7 +44,7 @@ NTP-synchronised (`sudo timedatectl set-ntp true`).
   it ([Installation guide, section 3.2](INSTALL.md#32-review-first-install)).
 - **`'OL1....' is only the example from the instructions, not a licence`** (or `--licence must be the whole licence text`):
   nothing was installed. Run the command again **without `--licence`**; the server starts in evaluation mode and you install
-  the licence afterwards under **Server > Plan** (send the Server ID shown there to your provider). If you do pass a
+  the licence afterwards under **Server Settings > Licence** (send the Server ID shown there to your provider). If you do pass a
   licence, it is the whole line starting with `OL1.`, copied without line breaks.
 - **`The release signature is not valid` / `That release ... is not signed`**: the files do not carry a valid signature of the
   Provider's release key, so nothing was installed. Try again (a download can be cut off); if it persists, do not use the files
@@ -72,14 +72,14 @@ NTP-synchronised (`sudo timedatectl set-ntp true`).
 - Forgotten password: another administrator can set a new one under **Users & Access**. If there is no other administrator,
   contact your provider.
 
-## The licence is refused or the Plan page shows a warning
+## The licence is refused or the Licence page shows a warning
 
 | Message or state | Meaning | What to do |
 |---|---|---|
-| `this licence was issued for another server (XXXX-...)` | The licence is tied to a different **Server ID** | Send this server's ID (**Server > Plan**) to your provider for a new licence |
+| `this licence was issued for another server (XXXX-...)` | The licence is tied to a different **Server ID** | Send this server's ID (**Server Settings > Licence**) to your provider for a new licence |
 | `the licence signature is not valid` | The text was changed or cut when copying | Copy the whole licence again (one line, starting with `OL1.`) |
 | `this licence has already expired; ask your provider for a renewed one` | The subscription ended long ago | Ask for a renewal |
-| `the hardware of this server no longer matches the licence` (or the warning on **Server > Plan**: *it keeps working for N more days*) | The server was copied, moved to a new host, or its network card changed, so the Server ID is another one | Send the **new Server ID** (**Server > Plan**) to your provider within the 14 days of grace. A copy that stays next to the original needs its own licence |
+| `the hardware of this server no longer matches the licence` (or the warning on **Server Settings > Licence**: *it keeps working for N more days*) | The server was copied, moved to a new host, or its network card changed, so the Server ID is another one | Send the **new Server ID** (**Server Settings > Licence**) to your provider within the 14 days of grace. A copy that stays next to the original needs its own licence |
 | **Grace period** | The subscription ended less than 14 days ago | Renew now; nothing is limited yet |
 | **Expired** | The grace period ended | No new devices or users can be added; collection and search carry on. Renew |
 | **Updates ended** | The running version was built after your update period | The server works, but cannot add devices or users. Go back to an older version ([Updates and rollback](UPGRADE.md#7-going-back-rollback)) or renew |
@@ -133,7 +133,7 @@ The server stays on HTTP, so nothing is locked out. The usual causes:
 - **Organization > Contact** has no Support e-mail (the certificate needs a contact).
 - A name that is an IP address cannot get a certificate.
 
-Fix the cause, then press **Set up HTTPS** again on **Server > Domain**.
+Fix the cause, then press **Set up HTTPS** again on **Server Settings > Domain**.
 
 ## An update failed or was undone
 
@@ -147,7 +147,7 @@ Fix the cause, then press **Set up HTTPS** again on **Server > Domain**.
 ## The disk is filling up
 
 1. See where it goes: `df -h` and `sudo du -xh /var/lib/clickhouse --max-depth=1 | sort -h | tail`.
-2. Grow it: **Server > Storage** shows each file system and how far it can be grown without a restart (take a snapshot or
+2. Grow it: **Server Settings > Storage** shows each file system and how far it can be grown without a restart (take a snapshot or
    backup first).
 3. Or keep logs for fewer days: **Log Settings** (default 180 days; cleanup runs nightly).
 4. Do not delete files under `/var/lib/clickhouse` or `/var/lib/postgresql` by hand.
