@@ -3,6 +3,58 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.14
+
+- Fix: exporting a **Search Log** result that matched more rows than the export cap (Log Settings >
+  Search and export policy > NAT export row cap, 20,000 by default) gave no sign that anything was
+  left out — the CSV or Excel file simply ended early, indistinguishable from a complete export. The
+  page now says so before you download ("Export is limited to the newest N of M; narrow the search for
+  a complete export"), and the export itself carries the real matched total so it is never silently
+  mistaken for the whole result.
+
+## 1.0.13
+
+- Changed: **Report a problem** now sends to `support@synavatech.com` (was the previous owner's personal
+  address). No behaviour changed, only which address.
+
+## 1.0.12
+
+- Changed: the **Server** page is now **Server Settings** in the sidebar and its own title, and its
+  **Plan** tab is now **Licence** (it always showed the licence and what it unlocks; the new name says
+  so directly). Every customer guide that pointed at "Server > Plan" now says "Server Settings >
+  Licence". No behaviour changed, only names.
+
+## 1.0.11
+
+- Fix: the Dashboard could lose previously-loaded Devices and Services data (the section would hide and
+  reappear) if a single periodic refresh had a transient failure fetching it — one slow or failed request
+  no longer wipes data the page already had; the next successful refresh updates it as normal.
+- New: raw log rotation now keeps 1 compressed hour by default (previously 4), matching how little of it
+  is normally needed before the data is safely in ClickHouse; the "Effective configuration" fact on Log
+  Settings, which had been describing an old scheme ("daily or 256 MB; 7 copies") no longer in use, now
+  states what actually runs (hourly; 1 compressed copy).
+
+## 1.0.10
+
+- New: the device and user limits a licence allows are now also enforced by the database itself, not
+  only by the portal's own "add device" and "add user" pages. Inserting a row directly into the
+  database — something only someone with the server's own root access could do in the first place —
+  is refused the same way the portal's own forms already refuse it, instead of silently going around
+  the limit. The signed licence is still the only thing that decides what the limit is; this only
+  makes sure the database agrees with it.
+- New: the audit trail (Activity Log) is a tamper-evident chain: every entry carries a hash of its own
+  content linked to the one before it, filled in by the database itself as each entry is recorded, so
+  editing or deleting an entry afterwards (outside the normal, logged retention clean-up) breaks the
+  chain instead of leaving no trace. A **Verify integrity** button on Activity Log checks the whole
+  chain and reports the first entry that does not check out, if any.
+
+## 1.0.9
+
+- Documentation, published on the front page of the public repository: a **"What you can do with it"** section
+  describing the Dashboard, Devices, Search Log, Active Users and Public IPs pages, each with a screenshot, plus a
+  summary of evidence retention, role-based access, server-bound licensing, signed updates and how **Report a
+  problem** reaches the Provider. There is no change to the programs.
+
 ## 1.0.8
 
 - Fix: **Report a problem** sent its e-mail link to the organization's own support address
