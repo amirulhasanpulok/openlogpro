@@ -1,7 +1,7 @@
 # Troubleshooting
 
 Find the symptom, read the cause, apply the fix. If it is not here, go to [What to send to support](#what-to-send-to-support).
-This guide describes version 1.0.17.
+This guide describes version 1.0.19.
 
 **Contents**
 
