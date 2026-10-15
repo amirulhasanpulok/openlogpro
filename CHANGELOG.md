@@ -3,6 +3,23 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.19
+
+- Fix: setting up HTTPS (Server Settings > Domain) could fail with a confusing "Invalid response ...
+  404" from Let's Encrypt and no clue why, when the domain resolved to this server **and** to some
+  other address too — most often a stale or wrong AAAA (IPv6) record left on a server that has no
+  IPv6. Let's Encrypt is free to use any address a domain resolves to, so it would sometimes pick the
+  wrong one and fail. The domain check now catches this itself, before anything is touched, and names
+  the extra address so it can be removed at the DNS provider.
+
+## 1.0.18
+
+- Fix: Server Settings actions that restart something (an update, a domain/network/storage change) could
+  show a raw, unreadable server error page instead of a real message if a request landed in the instant
+  the portal itself was down restarting — most visibly, clicking Update again right after an update was
+  already underway. These actions now say plainly that the server did not answer and to try again in a
+  moment, same as any other error on that page.
+
 ## 1.0.17
 
 - New: **Server Settings > Storage > Disks for logs** — choose which file systems hold the evidence
