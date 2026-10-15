@@ -3,6 +3,63 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.17
+
+- New: **Server Settings > Storage > Disks for logs** — choose which file systems hold the evidence
+  logs, any time after install, without touching the command line. Tick the system disk and any added
+  disks to hold logs together (each day's new logs go to whichever has the most room); untick one and
+  its older logs stay readable while the portal moves them onto the ticked disks in the background,
+  a partition at a time. A blank, unused disk can be prepared from the same page — partitioned,
+  formatted and mounted at `/data`, `/data2` and so on, with a password and the device name typed again
+  to confirm — and added to the disks for logs in the same step. This replaces needing to pick a log
+  directory at install time with something better: change it whenever storage needs change, not only
+  once.
+- New: **System Log** (Operations, was **Change Log**) — who changed what, on MikroTik, Cisco and OLT
+  devices: the command, the user, where it came from and the device's own log line, newest first, with
+  date/device/user/kind/text filters, CSV export and its own audit trail. A chip per device filters to
+  just that device's changes in one tap, and a Type filter (MikroTik/Cisco/OLT) sits beside it. The
+  Devices tab shows exactly how to add a device — the log-setup steps and commands for RouterOS 7,
+  RouterOS 6, a router already sending NAT logs, Cisco IOS/IOS XE and NX-OS, and OLT settings — and how
+  long changes are kept (a year by default). Configuration-change lines travel their own path end to
+  end (their own syslog spool, never mixed with NAT evidence) so collecting them cannot affect NAT log
+  collection. Saved links and roles for the old name, Change Log, keep working.
+- Changed: **Dashboard** —
+  - **Settings > Dashboard** (administrators) now chooses what everyone sees: **Detailed** (every
+    figure and graph, as before) or **Minimal** (collector, events today, log rate, active subscribers
+    and public NAT IPs in one row, then devices, services and the log partition — no graphs, so that
+    data is not even requested). In Minimal, which of 16 cards show is also chosen there.
+  - The header is now the title and a small light instead of a Refresh button: green while the figures
+    are current, amber if part of them could not be read or they are getting old, red if the server did
+    not answer; a click refreshes at once. The server's own clock sits beside it (the sidebar no longer
+    carries a separate status card).
+  - "Raw log size" is now "Raw log 24 h" and actually covers the last 24 hours; before, it grew with
+    however many days of logs the server had kept, which was not what the card's name implied.
+  - Storage by date's bar labels are now real calendar dates ("7 Oct"), evenly spaced and matching the
+    organization's date format everywhere on the card, instead of unevenly rounded "10-07"-style labels
+    that could skip a day.
+- Changed: the sidebar's **Settings** section is now a group that opens and closes, holding a new
+  Settings > Dashboard page alongside Users & Access, Log Settings, Notifications, Organization, Server
+  Settings and Activity Log.
+- Changed: a server with no company name set of its own now shows **Log Server** instead of **Evidence
+  Portal** as its default name. Nothing changes for any organization that has already set its own name
+  or branding.
+- Changed: the Telegram **daily report** is sent at midnight (the storage time zone) by default instead
+  of a time administrators had to set themselves, and the hour is now chosen from a readable list
+  ("12:00 AM (midnight)", "1:00 AM", ...) instead of typed as a bare number.
+- Fix: a Devices page could split one NAT router from its own access servers across two pages. Rows that
+  belong together now always land on the same page.
+- Fix: on a phone (390px and narrower), a few controls were hard to use — the page-number list on a
+  wide table could push First/Last off screen, a handful of buttons and switches were under the
+  comfortable 32px tap size, and some labels were set smaller than they should be. All fixed; nothing
+  scrolls sideways on a phone now.
+
+## 1.0.16
+
+- Hardened: every portal page's inline script now runs only under a fresh, unguessable permission
+  (a "nonce") generated for that one request. Before, it was allowed to run because the page's security
+  policy (CSP) trusted *any* inline script — which would equally have trusted one an attacker managed to
+  slip into the page some other way. No visible change for anyone using the portal normally.
+
 ## 1.0.15
 
 - Documentation, published on the front page of the public repository: the product description now names what it
