@@ -1,6 +1,6 @@
 # Installation guide
 
-This guide installs Openlog on a new Ubuntu 24.04 server and takes it to a verified, secured, licensed system with its first router connected. It describes version 1.0.19.
+This guide installs Openlog on a new Ubuntu 24.04 server and takes it to a verified, secured, licensed system with its first router connected. It describes version 1.0.21.
 
 **Contents**
 
