@@ -3,6 +3,25 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.21
+
+- Fix: Server Settings > Storage > Expand refused a data disk that was formatted directly with no
+  partition table at all (a common way to add and use a new disk), even when the disk itself had
+  genuinely grown. It is now offered the same as a partition or a logical volume.
+
+## 1.0.20
+
+- New: **Users & Access > System Log access** — restrict a user to specific System Log devices
+  (MikroTik, Cisco, OLT), the same way device access already restricts which NAT routers they can
+  search. Before this, anyone with the System Log menu saw every configured device's changes
+  regardless of their NAT router assignment, because System Log devices are kept in their own,
+  separate list and were not covered by that restriction at all. Administrators always see every
+  device, same as before.
+- New: **idle sign-out**. After a period with no activity (Settings, default 30 minutes; 0 turns it
+  off), the portal warns with 60 seconds left and signs out on its own if nothing answers; any
+  response keeps the session going. Protects a session left open and unattended. Staying active in
+  one browser tab keeps every other open tab of the same session from timing out on its own too.
+
 ## 1.0.19
 
 - Fix: setting up HTTPS (Server Settings > Domain) could fail with a confusing "Invalid response ...
