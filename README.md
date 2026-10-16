@@ -5,7 +5,7 @@ your MikroTik routers already produce — including from carrier-grade NAT (CGNA
 matches every connection to the subscriber who made it, and keeps it searchable as evidence. It runs on one Ubuntu
 server: portal, PostgreSQL, ClickHouse, syslog-ng and Nginx, installed and updated by one command or from the portal.
 
-**Current version: 1.0.19** | built 2026-10-15T10:53:20Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
+**Current version: 1.0.21** | built 2026-10-16T20:16:01Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
 
 This repository holds **releases only**: finished programs, no source code.
 
@@ -100,11 +100,8 @@ pool that is running hot or answering "who else was behind this IP at the same t
 | Updates | From **Server Settings > Updates**, or `sudo /usr/local/lib/openlog/update-log-server`. The last releases are kept, so you can go back |
 | Support | **Report a problem** in the portal sidebar creates a report with a reference number and the server's technical details, without passwords or logs |
 
-## What is new in 1.0.19
+## What is new in 1.0.21
 
-- Fix: setting up HTTPS (Server Settings > Domain) could fail with a confusing "Invalid response ...
-  404" from Let's Encrypt and no clue why, when the domain resolved to this server **and** to some
-  other address too — most often a stale or wrong AAAA (IPv6) record left on a server that has no
-  IPv6. Let's Encrypt is free to use any address a domain resolves to, so it would sometimes pick the
-  wrong one and fail. The domain check now catches this itself, before anything is touched, and names
-  the extra address so it can be removed at the DNS provider.
+- Fix: Server Settings > Storage > Expand refused a data disk that was formatted directly with no
+  partition table at all (a common way to add and use a new disk), even when the disk itself had
+  genuinely grown. It is now offered the same as a partition or a logical volume.
