@@ -5,7 +5,7 @@ your MikroTik routers already produce — including from carrier-grade NAT (CGNA
 matches every connection to the subscriber who made it, and keeps it searchable as evidence. It runs on one Ubuntu
 server: portal, PostgreSQL, ClickHouse, syslog-ng and Nginx, installed and updated by one command or from the portal.
 
-**Current version: 1.0.21** | built 2026-10-16T20:16:01Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
+**Current version: 1.0.26** | built 2026-10-18T12:25:36Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
 
 This repository holds **releases only**: finished programs, no source code.
 
@@ -100,8 +100,8 @@ pool that is running hot or answering "who else was behind this IP at the same t
 | Updates | From **Server Settings > Updates**, or `sudo /usr/local/lib/openlog/update-log-server`. The last releases are kept, so you can go back |
 | Support | **Report a problem** in the portal sidebar creates a report with a reference number and the server's technical details, without passwords or logs |
 
-## What is new in 1.0.21
+## What is new in 1.0.26
 
-- Fix: Server Settings > Storage > Expand refused a data disk that was formatted directly with no
-  partition table at all (a common way to add and use a new disk), even when the disk itself had
-  genuinely grown. It is now offered the same as a partition or a logical volume.
+- Removed the **Services** card from the Dashboard. Service status is still on System > Service info;
+  this only removes the dashboard shortcut card. An administrator who had added it to a customized
+  minimal dashboard view will see one fewer card there; nothing else changes.
