@@ -3,6 +3,40 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.26
+
+- Removed the **Services** card from the Dashboard. Service status is still on System > Service info;
+  this only removes the dashboard shortcut card. An administrator who had added it to a customized
+  minimal dashboard view will see one fewer card there; nothing else changes.
+
+## 1.0.25
+
+- Fix: the "Powered by" credit (Organization > General > "Show 'Powered by ...'", off by default) named
+  a generic placeholder vendor instead of Synava Technologies Ltd, the company that develops this
+  product.
+
+## 1.0.24
+
+- New: a **Network** card on the Dashboard graphs this server's own network interface traffic
+  (in/out, last hour, peaks, and the link speed when the driver reports one) so a bottleneck on the
+  server's own NIC is visible at a glance, the same way CPU and memory already are. Sampled by the
+  portal itself every 10 seconds, kept in memory only; nothing is installed and nothing is written to
+  disk.
+
+## 1.0.23
+
+- New: the MikroTik setup script's **subscriber private ranges** field now takes several ranges,
+  separated by commas (for example `10.10.1.0/24,10.10.2.0/24,10.10.3.0/24`), not just one. The
+  script builds a firewall address list from them and the NAT logging rule matches against that
+  list, instead of a single subnet written directly into the rule — so a network whose subscribers
+  span more than one private range no longer has to pick just one or leave some of it unlogged.
+
+## 1.0.22
+
+- Fix: hardened licence enforcement against an edge case that could let an installation end up with
+  more devices or users than its licence allows. It now notices such a mismatch on its own and locks
+  (no new devices or users, the same way an expired licence locks) until it is resolved.
+
 ## 1.0.21
 
 - Fix: Server Settings > Storage > Expand refused a data disk that was formatted directly with no
