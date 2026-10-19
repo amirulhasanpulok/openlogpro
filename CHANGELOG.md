@@ -3,6 +3,16 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.27
+
+- Server Settings > Updates > Installed versions now only offers going back to the release right
+  before the one running (to undo the last update), not an arbitrary older kept release.
+- Idle sign-out (Settings) now defaults to 5 minutes instead of 30 on a new install.
+- Performance: several places that made one database query per row in a loop (checking a batch of
+  device/user ids, assigning several devices to a user, the notifier explaining a batch of silent
+  devices) now make one query for the whole batch; connection pools to Postgres and ClickHouse are
+  now bounded instead of unlimited.
+
 ## 1.0.26
 
 - Removed the **Services** card from the Dashboard. Service status is still on System > Service info;
