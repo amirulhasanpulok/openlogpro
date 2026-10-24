@@ -5,7 +5,7 @@ your MikroTik routers already produce — including from carrier-grade NAT (CGNA
 matches every connection to the subscriber who made it, and keeps it searchable as evidence. It runs on one Ubuntu
 server: portal, PostgreSQL, ClickHouse, syslog-ng and Nginx, installed and updated by one command or from the portal.
 
-**Current version: 1.0.27** | built 2026-10-19T00:55:29Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
+**Current version: 1.0.28** | built 2026-10-24T14:05:51Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
 
 This repository holds **releases only**: finished programs, no source code.
 
@@ -100,12 +100,9 @@ pool that is running hot or answering "who else was behind this IP at the same t
 | Updates | From **Server Settings > Updates**, or `sudo /usr/local/lib/openlog/update-log-server`. The last releases are kept, so you can go back |
 | Support | **Report a problem** in the portal sidebar creates a report with a reference number and the server's technical details, without passwords or logs |
 
-## What is new in 1.0.27
+## What is new in 1.0.28
 
-- Server Settings > Updates > Installed versions now only offers going back to the release right
-  before the one running (to undo the last update), not an arbitrary older kept release.
-- Idle sign-out (Settings) now defaults to 5 minutes instead of 30 on a new install.
-- Performance: several places that made one database query per row in a loop (checking a batch of
-  device/user ids, assigning several devices to a user, the notifier explaining a batch of silent
-  devices) now make one query for the whole batch; connection pools to Postgres and ClickHouse are
-  now bounded instead of unlimited.
+- Hardening: the database migrations that run on every startup now take a brief lock first, so
+  two processes can never race to create the same table/trigger for the first time. No change for
+  a normal single-server install (the lock is acquired and released instantly); this only matters
+  for a future clustered deployment, which cannot start safely without it.
