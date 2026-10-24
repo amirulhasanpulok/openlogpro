@@ -3,6 +3,13 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.28
+
+- Hardening: the database migrations that run on every startup now take a brief lock first, so
+  two processes can never race to create the same table/trigger for the first time. No change for
+  a normal single-server install (the lock is acquired and released instantly); this only matters
+  for a future clustered deployment, which cannot start safely without it.
+
 ## 1.0.27
 
 - Server Settings > Updates > Installed versions now only offers going back to the release right
