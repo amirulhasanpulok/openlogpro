@@ -5,7 +5,7 @@ your MikroTik routers already produce — including from carrier-grade NAT (CGNA
 matches every connection to the subscriber who made it, and keeps it searchable as evidence. It runs on one Ubuntu
 server: portal, PostgreSQL, ClickHouse, syslog-ng and Nginx, installed and updated by one command or from the portal.
 
-**Current version: 1.0.38** | built 2026-10-26T08:50:13Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
+**Current version: 1.0.39** | built 2026-10-26T12:18:05Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
 
 This repository holds **releases only**: finished programs, no source code.
 
@@ -100,12 +100,9 @@ pool that is running hot or answering "who else was behind this IP at the same t
 | Updates | From **Server Settings > Updates**, or `sudo /usr/local/lib/openlog/update-log-server`. The last releases are kept, so you can go back |
 | Support | **Report a problem** in the portal sidebar creates a report with a reference number and the server's technical details, without passwords or logs |
 
-## What is new in 1.0.38
+## What is new in 1.0.39
 
-- The "Powered by Synava Technologies Ltd" credit on the sign-in page and in the sidebar is now
-  mandatory -- it always shows, with no setting, environment variable or API field anywhere that
-  can hide it or rename who it credits.
-- Fix: the Devices card on the dashboard could flash hidden-then-visible on every page reload,
-  unlike every other card. It now renders immediately with the same placeholders the rest of the
-  dashboard uses, instead of starting hidden and popping in once its data arrives.
-- The sign-in page's left panel now shows a network topology graphic instead of a plain gradient.
+- The NAT log worker now automatically spreads its work across every CPU core the server has,
+  on every update -- not only on a fresh install. A server that has been running as a single
+  process grows into one process per core (up to 16) the next time it is updated, with no manual
+  step. Shard count only ever grows to match more CPUs; it is never reduced on its own.
