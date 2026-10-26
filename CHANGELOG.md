@@ -3,6 +3,13 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.39
+
+- The NAT log worker now automatically spreads its work across every CPU core the server has,
+  on every update -- not only on a fresh install. A server that has been running as a single
+  process grows into one process per core (up to 16) the next time it is updated, with no manual
+  step. Shard count only ever grows to match more CPUs; it is never reduced on its own.
+
 ## 1.0.38
 
 - The "Powered by Synava Technologies Ltd" credit on the sign-in page and in the sidebar is now
