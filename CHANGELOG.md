@@ -3,6 +3,16 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.38
+
+- The "Powered by Synava Technologies Ltd" credit on the sign-in page and in the sidebar is now
+  mandatory -- it always shows, with no setting, environment variable or API field anywhere that
+  can hide it or rename who it credits.
+- Fix: the Devices card on the dashboard could flash hidden-then-visible on every page reload,
+  unlike every other card. It now renders immediately with the same placeholders the rest of the
+  dashboard uses, instead of starting hidden and popping in once its data arrives.
+- The sign-in page's left panel now shows a network topology graphic instead of a plain gradient.
+
 ## 1.0.37
 
 - Fix: a router's very first logs, sent right after it was added, could be silently and
