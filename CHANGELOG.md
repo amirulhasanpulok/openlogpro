@@ -3,6 +3,129 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.37
+
+- Fix: a router's very first logs, sent right after it was added, could be silently and
+  permanently lost. The NAT log worker only learns about a newly added router on its next
+  background refresh (a few seconds later), but reads each log line exactly once -- any line that
+  arrived in that short gap was dropped for good, with no retry. In practice this meant adding a
+  router and sending it traffic right away (the normal thing to do) could lose its opening
+  activity. The worker now double-checks directly with the database the moment it sees a router
+  identity it does not yet recognize, instead of only trusting its own cache, so nothing arriving
+  in that gap is lost. Found and reproduced via this project's own install tests (1.0.33's and
+  1.0.36's diagnostics additions); confirmed not a one-off, and not specific to any particular
+  server size.
+
+## 1.0.36
+
+- No functional change. 1.0.35's own install test still failed in CI on "a router sends logs and
+  they can be found" -- confirmed, with the new diagnostics 1.0.35 just added, that the syslog
+  lines really do arrive at the worker (`syslog_received`) but are then dropped every time
+  (`syslog_dropped`, `syslog_parsed` staying 0) because the worker's own router-attribution cache
+  never recognizes the router's identity, for reasons the existing metrics could not narrow down
+  further: the router genuinely exists, enabled and verified, by every direct database check, and
+  the worker logs no error of any kind. This release adds three more `/metrics` fields
+  (`syslog_router_cache_size`, `syslog_ident_cache_size`, `syslog_router_poll_cursor_unixtime`) so
+  the next failing run shows whether the worker's background poller ever saw the row at all,
+  rather than requiring another guess.
+
+## 1.0.35
+
+- Fix: a router whose stored RouterOS API credential could not be decrypted (corrupted, or set
+  before a key rotation) used to stop the reconciler from reconciling *every* router that cycle,
+  not just the broken one. It now skips the broken router and keeps going. Caught by this
+  project's own install tests before reaching this channel; customers never saw this.
+- The install tests themselves now print each NAT syslog worker's own counters and raw-log spool
+  state on failure, so a future "events never arrived" failure says where in the pipeline they
+  were lost instead of just that they were. No change to the shipped software's own behavior.
+
+## 1.0.34
+
+- No functional change from 1.0.33. That release's own software was correct, but its own
+  `checks / tests (race, real databases)` CI job failed on a genuine test bug (not a product
+  bug): `collector/router-reconciler`'s rotation regression test started its log watcher with no
+  synchronization, then wrote and rotated a tiny (200-line) backlog fast enough that under a
+  loaded CI runner the watcher's very first file-open could land *after* the rotation had already
+  completed -- a known, documented, out-of-scope gap for this kind of watcher (see that module's
+  sibling test in `collector/syslog-worker`), not something the fix for mid-backlog rotation can
+  address, because there is no open file descriptor yet to protect. The test now waits for the
+  watcher's first read pass to actually land before triggering the rotation it's meant to test,
+  matching its own stated intent. Re-cut only to ship that test fix; nothing in the shipped binary
+  changed.
+
+## 1.0.33
+
+- No functional change from 1.0.32. That release's own software was already correct (confirmed
+  by reproducing its install tests' exact scenario by hand on a running server: 20 events arrived
+  in 21 seconds), but a small CI runner doing a fresh database and multi-process install at the
+  same time this project's own install tests ran needed longer than this project gave it to
+  confirm that. Re-cut only to give that check more time.
+
+## 1.0.32
+
+- Fix: 1.0.31's installer could still fail, a different way than 1.0.30's -- starting the
+  allowlist-refresh timer right before the installer's own one-time allowlist refresh could make
+  both write the same file at once ("File exists"). The timer now only starts once that one-time
+  refresh has already finished. Caught by this project's own install tests before reaching this
+  channel; customers never saw 1.0.31.
+
+## 1.0.31
+
+- Fix: 1.0.30's installer could abort partway through on a server where the environment did not
+  allow setting up compressed swap (zram) -- for example, no permission to create block devices --
+  instead of simply continuing without it. Caught by this project's own install tests before
+  reaching this channel; customers never saw 1.0.30.
+
+## 1.0.30
+
+- New: the NAT log worker can now run as several processes sharing the work across CPU cores
+  instead of one process regardless of how many cores the server has. A fresh install detects the
+  core count automatically; an existing install stays single-process until an administrator asks
+  for more, after which it grows automatically on a later reboot if more CPUs become available,
+  and never shrinks on its own. Which processor a router's logs land on uses consistent hashing,
+  so growing the count later moves only a minority of routers, not nearly all of them.
+- Performance: each of those processes used to keep a full, independent copy of every router's and
+  subscriber's session data in memory, so splitting the work across more processes multiplied
+  memory use by that many times over. Each one now only keeps the data for the routers whose logs
+  it actually receives (measured on one server: a 4.2 GB working set dropped to 0.7 GB at 10
+  processes).
+- Performance: the Dashboard could take several seconds to load, worst on a server with a long
+  history of stored evidence. Its unique-subscriber count was reading far more history from disk
+  than the requested time window actually needed; it now reads only what the window needs
+  (measured: 1.8-4.2s dropped to under 0.1s for that one number, and the page itself now caches its
+  summary briefly so a normal auto-refresh does not repeat the full cost every time).
+- Fix: a router that merely timed out during a reconciliation cycle used to disappear from the
+  Dashboard's Active Subscribers count entirely, even though its sessions were still open; it now
+  keeps contributing its last known count until the next successful check.
+- Fix: during an outage affecting several routers at once, reconciliation worked through them in no
+  particular order, so a healthy router queued behind several unreachable ones could wait minutes
+  for its turn. Routers that failed last cycle are now reconciled last, so healthy ones are never
+  delayed by ones already known to be down.
+- Fix: a single oversized, malformed line reaching the router reconciler's login/logout tracking
+  could stop it entirely instead of being skipped and logged, the same protection the NAT log
+  worker already had.
+- Fix: a transient database error while checking the server's own clock (used to detect it being
+  rolled back to revive an expired licence) used to skip that check instead of still cross-checking
+  the audit trail, narrowing a defense already in place for exactly this kind of bypass.
+- Hardening: the database connection pools the NAT log worker and the router reconciler open are
+  now bounded instead of unlimited, matching the portal's own pools -- a burst of connection
+  attempts (for example, several processes starting at once) can no longer exhaust the database's
+  connection limit on its own.
+- New installs and updates now also set up compressed RAM-backed swap ahead of any disk-backed swap
+  already configured, giving a server under temporary memory pressure a faster fallback than disk
+  swap alone.
+
+## 1.0.29
+
+- Fix: hardened licence enforcement against two more edge cases involving the server's own clock and
+  hardware-change grace period, so an installation cannot be kept artificially within a grace period
+  that has really already ended.
+- Performance: the NAT log worker's router/subscriber lookup no longer re-reads the full
+  `routers`/`sessions` tables every few seconds on the same path that parses every log line. It
+  now keeps its lookup cache current with small, incremental queries instead, so performance no
+  longer degrades as the number of devices and subscribers grows. No change in what gets matched
+  or logged.
+
 ## 1.0.28
 
 - Hardening: the database migrations that run on every startup now take a brief lock first, so
