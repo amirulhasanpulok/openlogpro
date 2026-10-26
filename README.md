@@ -5,7 +5,7 @@ your MikroTik routers already produce — including from carrier-grade NAT (CGNA
 matches every connection to the subscriber who made it, and keeps it searchable as evidence. It runs on one Ubuntu
 server: portal, PostgreSQL, ClickHouse, syslog-ng and Nginx, installed and updated by one command or from the portal.
 
-**Current version: 1.0.28** | built 2026-10-24T14:05:51Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
+**Current version: 1.0.37** | built 2026-10-26T03:57:48Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
 
 This repository holds **releases only**: finished programs, no source code.
 
@@ -100,9 +100,15 @@ pool that is running hot or answering "who else was behind this IP at the same t
 | Updates | From **Server Settings > Updates**, or `sudo /usr/local/lib/openlog/update-log-server`. The last releases are kept, so you can go back |
 | Support | **Report a problem** in the portal sidebar creates a report with a reference number and the server's technical details, without passwords or logs |
 
-## What is new in 1.0.28
+## What is new in 1.0.37
 
-- Hardening: the database migrations that run on every startup now take a brief lock first, so
-  two processes can never race to create the same table/trigger for the first time. No change for
-  a normal single-server install (the lock is acquired and released instantly); this only matters
-  for a future clustered deployment, which cannot start safely without it.
+- Fix: a router's very first logs, sent right after it was added, could be silently and
+  permanently lost. The NAT log worker only learns about a newly added router on its next
+  background refresh (a few seconds later), but reads each log line exactly once -- any line that
+  arrived in that short gap was dropped for good, with no retry. In practice this meant adding a
+  router and sending it traffic right away (the normal thing to do) could lose its opening
+  activity. The worker now double-checks directly with the database the moment it sees a router
+  identity it does not yet recognize, instead of only trusting its own cache, so nothing arriving
+  in that gap is lost. Found and reproduced via this project's own install tests (1.0.33's and
+  1.0.36's diagnostics additions); confirmed not a one-off, and not specific to any particular
+  server size.
