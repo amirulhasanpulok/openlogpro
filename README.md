@@ -5,7 +5,7 @@ your MikroTik routers already produce — including from carrier-grade NAT (CGNA
 matches every connection to the subscriber who made it, and keeps it searchable as evidence. It runs on one Ubuntu
 server: portal, PostgreSQL, ClickHouse, syslog-ng and Nginx, installed and updated by one command or from the portal.
 
-**Current version: 1.0.39** | built 2026-10-26T12:18:05Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
+**Current version: 1.0.41** | built 2026-10-27T05:50:54Z | [Release notes](CHANGELOG.md) | [All releases](https://github.com/amirulhasanpulok/openlogpro/releases)
 
 This repository holds **releases only**: finished programs, no source code.
 
@@ -100,9 +100,17 @@ pool that is running hot or answering "who else was behind this IP at the same t
 | Updates | From **Server Settings > Updates**, or `sudo /usr/local/lib/openlog/update-log-server`. The last releases are kept, so you can go back |
 | Support | **Report a problem** in the portal sidebar creates a report with a reference number and the server's technical details, without passwords or logs |
 
-## What is new in 1.0.39
+## What is new in 1.0.41
 
-- The NAT log worker now automatically spreads its work across every CPU core the server has,
-  on every update -- not only on a fresh install. A server that has been running as a single
-  process grows into one process per core (up to 16) the next time it is updated, with no manual
-  step. Shard count only ever grows to match more CPUs; it is never reduced on its own.
+- Fix: a router whose very first burst of traffic arrived while Postgres was slow or briefly
+  unreachable could stall log ingestion for that whole shard with no time limit. The check now
+  gives up and keeps going after a few seconds, the same way every other database call in the
+  worker already does.
+- Fix: a problem reading one shard's PPP login/logout events (a disk or permissions issue) used
+  to stop the reconciler from watching *every* shard's events, not just the affected one.
+- Performance: Search Log now starts fetching your results and counting the total match at the
+  same time instead of one after the other, so a new search returns faster. The router name shown
+  next to each result is also cached for a few seconds instead of being looked up from the
+  database on every single search.
+- Postgres's connection limit now scales with how many CPU cores a server has, so a heavily
+  sharded install can't run short of database connections.
