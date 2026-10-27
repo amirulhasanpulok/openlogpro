@@ -3,6 +3,28 @@
 Each release has a section headed `## VERSION`. `deployment/release.sh publish` puts that section into the
 release notes, and the portal shows it on Organization > Updates ("What is new").
 
+## 1.0.41
+
+- Fix: a router whose very first burst of traffic arrived while Postgres was slow or briefly
+  unreachable could stall log ingestion for that whole shard with no time limit. The check now
+  gives up and keeps going after a few seconds, the same way every other database call in the
+  worker already does.
+- Fix: a problem reading one shard's PPP login/logout events (a disk or permissions issue) used
+  to stop the reconciler from watching *every* shard's events, not just the affected one.
+- Performance: Search Log now starts fetching your results and counting the total match at the
+  same time instead of one after the other, so a new search returns faster. The router name shown
+  next to each result is also cached for a few seconds instead of being looked up from the
+  database on every single search.
+- Postgres's connection limit now scales with how many CPU cores a server has, so a heavily
+  sharded install can't run short of database connections.
+
+## 1.0.40
+
+- Fix: the "Powered by Synava Technologies Ltd" credit (and anything else at the bottom of the
+  sidebar) could run off the bottom of the screen for an organization whose name is long enough
+  to wrap onto several lines. The sidebar now sizes itself around the real height of your company
+  name instead of assuming it always fits on one line.
+
 ## 1.0.39
 
 - The NAT log worker now automatically spreads its work across every CPU core the server has,
